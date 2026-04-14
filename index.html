@@ -1,18 +1,743 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#0B1120">
   <title>Fila - Barbearia do Paraguai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    *{margin:0;padding:0}
-    body,html{width:100%;height:100%;overflow:hidden;background:#0B1120}
-    iframe{width:100%;height:100%;border:none}
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      font-family: 'Inter', sans-serif;
+      background: #0B1120;
+      color: #e2e8f0;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      font-size: 16px;
+    }
+
+    body { padding-bottom: 110px; }
+
+    .header {
+      background: linear-gradient(180deg, #0f1d35 0%, #0B1120 100%);
+      padding: 28px 20px 20px;
+      text-align: center;
+      border-bottom: 2px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .header h1 {
+      font-size: 26px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #D4AF37, #F5D060);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .header-sub {
+      font-size: 15px;
+      color: #64748b;
+      margin-top: 6px;
+      font-weight: 600;
+    }
+
+    .install-banner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 16px 16px 0;
+      padding: 14px 16px;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.12), rgba(212, 175, 55, 0.05));
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 14px;
+    }
+
+    .install-banner.hidden { display: none; }
+    .install-banner-text { flex: 1; }
+
+    .install-banner-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #D4AF37;
+    }
+
+    .install-banner-desc {
+      font-size: 13px;
+      color: #94a3b8;
+      font-weight: 500;
+      margin-top: 3px;
+    }
+
+    .install-banner-btn {
+      padding: 10px 16px;
+      background: linear-gradient(135deg, #D4AF37, #F5D060);
+      color: #0B1120;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      white-space: nowrap;
+      text-transform: uppercase;
+    }
+
+    .install-banner-close {
+      background: none;
+      border: none;
+      color: #64748b;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 6px 10px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .install-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .install-modal.show { display: flex; }
+
+    .install-modal-content {
+      background: #1a2744;
+      border-radius: 22px;
+      padding: 32px 24px;
+      max-width: 360px;
+      width: 100%;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .install-modal-title {
+      font-size: 22px;
+      font-weight: 900;
+      color: #D4AF37;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .install-step {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 20px;
+      align-items: flex-start;
+    }
+
+    .install-step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e40af, #3b82f6);
+      color: white;
+      font-size: 16px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .install-step-text {
+      font-size: 17px;
+      color: #cbd5e1;
+      font-weight: 600;
+      line-height: 1.5;
+      padding-top: 4px;
+    }
+
+    .install-modal-close {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      margin-top: 12px;
+      background: linear-gradient(135deg, #D4AF37, #F5D060);
+      color: #0B1120;
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .unit-tabs {
+      display: flex;
+      margin: 16px 16px 0;
+      background: rgba(15, 23, 42, 0.8);
+      border-radius: 16px;
+      padding: 5px;
+      border: 1px solid rgba(59, 130, 246, 0.15);
+    }
+
+    .unit-tab {
+      flex: 1;
+      padding: 16px 10px;
+      text-align: center;
+      font-size: 17px;
+      font-weight: 800;
+      color: #64748b;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      background: transparent;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .unit-tab.active {
+      background: linear-gradient(135deg, rgba(29, 78, 216, 0.5), rgba(37, 99, 235, 0.3));
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .status-bar {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      padding: 18px 20px;
+      margin: 14px 16px 0;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 14px;
+      border: 1px solid rgba(59, 130, 246, 0.1);
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #94a3b8;
+    }
+
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .status-dot.fila { background: #fbbf24; }
+    .status-dot.atendendo { background: #3b82f6; }
+
+    .status-number {
+      font-weight: 900;
+      color: #e2e8f0;
+      font-size: 18px;
+    }
+
+    .barbers-container {
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .barber-card {
+      background: linear-gradient(135deg, rgba(15, 30, 56, 0.8), rgba(10, 20, 40, 0.6));
+      border: 1px solid rgba(59, 130, 246, 0.15);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .barber-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px;
+      background: linear-gradient(135deg, rgba(29, 78, 216, 0.2), rgba(37, 99, 235, 0.08));
+      border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+    }
+
+    .barber-card-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .barber-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e40af, #3b82f6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 900;
+      color: #93c5fd;
+      border: 2px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .barber-card-name {
+      font-size: 22px;
+      font-weight: 900;
+      color: #93c5fd;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .barber-card-status {
+      font-size: 14px;
+      font-weight: 800;
+      padding: 6px 16px;
+      border-radius: 10px;
+    }
+
+    .barber-card-status.livre {
+      color: #4ade80;
+      background: rgba(74, 222, 128, 0.12);
+      border: 1px solid rgba(74, 222, 128, 0.3);
+    }
+
+    .barber-card-status.ocupado {
+      color: #f97316;
+      background: rgba(249, 115, 22, 0.12);
+      border: 1px solid rgba(249, 115, 22, 0.3);
+    }
+
+    .barber-card-body { padding: 16px 20px; }
+
+    .barber-stats {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .barber-stat {
+      flex: 1;
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 16px;
+      padding: 16px 10px;
+      text-align: center;
+      border: 1px solid rgba(59, 130, 246, 0.08);
+    }
+
+    .barber-stat-number {
+      font-size: 36px;
+      font-weight: 900;
+      color: #e2e8f0;
+    }
+
+    .barber-stat-number.warning { color: #fbbf24; }
+    .barber-stat-number.ok { color: #4ade80; }
+
+    .barber-stat-label {
+      font-size: 13px;
+      color: #64748b;
+      font-weight: 700;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .queue-section { margin-top: 12px; }
+
+    .queue-person {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+      margin-bottom: 6px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid rgba(59, 130, 246, 0.08);
+    }
+
+    .queue-person-status {
+      font-size: 15px;
+      font-weight: 800;
+      padding: 5px 16px;
+      border-radius: 8px;
+      text-transform: uppercase;
+    }
+
+    .queue-person-status.chamado {
+      color: #fb923c;
+      background: rgba(249, 115, 22, 0.15);
+      animation: pulseText 1.5s infinite;
+    }
+
+    .queue-person-status.cortando {
+      color: #60a5fa;
+      background: rgba(59, 130, 246, 0.12);
+    }
+
+    @keyframes pulseText {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .empty-barber {
+      text-align: center;
+      padding: 18px;
+      font-size: 16px;
+      color: #475569;
+      font-style: italic;
+    }
+
+    .sem-pref-section {
+      margin: 0 16px 14px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(139, 92, 246, 0.03));
+      border: 1px solid rgba(139, 92, 246, 0.15);
+      border-radius: 18px;
+      padding: 16px 20px;
+    }
+
+    .sem-pref-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #a78bfa;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .sem-pref-chip {
+      font-size: 16px;
+      font-weight: 700;
+      color: #c4b5fd;
+      background: rgba(139, 92, 246, 0.1);
+      padding: 8px 16px;
+      border-radius: 10px;
+      border: 1px solid rgba(139, 92, 246, 0.15);
+    }
+
+    .cta-container {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 14px 16px 30px;
+      background: linear-gradient(0deg, #0B1120 70%, transparent 100%);
+      z-index: 100;
+    }
+
+    .cta-button {
+      display: block;
+      width: 100%;
+      padding: 22px;
+      background: linear-gradient(135deg, #D4AF37, #F5D060);
+      color: #0B1120;
+      font-family: 'Inter', sans-serif;
+      font-size: 20px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border: none;
+      border-radius: 18px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      box-shadow: 0 4px 25px rgba(212, 175, 55, 0.35);
+    }
+
+    .cta-button:active { transform: scale(0.98); }
+
+    .last-update {
+      text-align: center;
+      font-size: 14px;
+      color: #475569;
+      padding: 12px 20px 6px;
+      font-weight: 600;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 50px 20px;
+      color: #64748b;
+      font-size: 18px;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(59, 130, 246, 0.15);
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 18px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .error-msg {
+      text-align: center;
+      padding: 40px 20px;
+      color: #f87171;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .error-msg button {
+      margin-top: 16px;
+      padding: 12px 24px;
+      background: #1e40af;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
   </style>
 </head>
 <body>
-  <iframe src="https://script.google.com/macros/s/AKfycbxPP849ILpbinG34pw08ELXiAevg6umf-T8NaMeGY9QnMy9V5Ya1OHi4AK5r_UehIZQHw/exec?p=cliente"></iframe>
+  <div class="header">
+    <h1>Barbearia do Paraguai</h1>
+    <div class="header-sub">Acompanhe a fila em tempo real</div>
+  </div>
+
+  <div class="install-banner" id="installBanner">
+    <div class="install-banner-text">
+      <div class="install-banner-title">Salve na tela inicial</div>
+      <div class="install-banner-desc">Acesse a fila rapido como um app</div>
+    </div>
+    <button class="install-banner-btn" id="installBtn">Como salvar</button>
+    <button class="install-banner-close" id="installClose">X</button>
+  </div>
+
+  <div class="install-modal" id="installModal">
+    <div class="install-modal-content">
+      <div class="install-modal-title">Salvar na tela inicial</div>
+      <div class="install-modal-steps" id="installSteps"></div>
+      <button class="install-modal-close" id="installModalClose">Entendi</button>
+    </div>
+  </div>
+
+  <div class="unit-tabs" id="unitTabs"></div>
+
+  <div class="status-bar" id="statusBar">
+    <div class="loading">
+      <div class="loading-spinner"></div>
+      Carregando fila...
+    </div>
+  </div>
+
+  <div class="barbers-container" id="barbersContainer"></div>
+  <div id="semPrefContainer"></div>
+  <div class="last-update" id="lastUpdate"></div>
+
+  <div class="cta-container">
+    <a class="cta-button" id="ctaButton" href="#" target="_blank">Entrar na Fila</a>
+  </div>
+
+  <script>
+    var API_URL = "https://script.google.com/macros/s/AKfycbxPP849ILpbinG34pw08ELXiAevg6umf-T8NaMeGY9QnMy9V5Ya1OHi4AK5r_UehIZQHw/exec?p=api";
+
+    var allData = { fila: [], barbeiros: [] };
+    var currentUnit = "";
+    var TEMPO_MEDIO_CORTE = 30;
+
+    var formLinks = {
+      "Unidade 1": "https://docs.google.com/forms/d/e/1FAIpQLSeQy6lilC6gyYiBF65qMhaYzQUwPqQnHQyNgrMaA4kGxTmXuA/viewform",
+      "Unidade 2": "https://docs.google.com/forms/d/e/1FAIpQLScZ4Z-0wVYLVshLWbxuTBAtwNyL_lvBmPISOxaekgEH3-LYbw/viewform"
+    };
+
+    var unitNames = {
+      "Unidade 1": "Bordignon",
+      "Unidade 2": "Joao Pessoa"
+    };
+
+    function loadData() {
+      fetch(API_URL)
+        .then(function(response) { return response.json(); })
+        .then(function(data) {
+          allData = data;
+          if (!currentUnit) {
+            var units = [];
+            allData.barbeiros.forEach(function(b) {
+              if (b.unidade && units.indexOf(b.unidade) === -1) units.push(b.unidade);
+            });
+            units.sort();
+            currentUnit = units[0] || "Unidade 1";
+            renderTabs(units);
+          }
+          renderAll();
+        })
+        .catch(function(err) {
+          console.error("Erro ao carregar dados:", err);
+          document.getElementById('statusBar').innerHTML =
+            '<div class="error-msg">Erro ao carregar a fila<br><button onclick="loadData()">Tentar novamente</button></div>';
+        });
+    }
+
+    function renderTabs(units) {
+      var tabs = document.getElementById('unitTabs');
+      var html = '';
+      units.forEach(function(u) {
+        var label = unitNames[u] || u;
+        var active = u === currentUnit ? ' active' : '';
+        html += '<button class="unit-tab' + active + '" data-unit="' + u + '">' + label + '</button>';
+      });
+      tabs.innerHTML = html;
+
+      tabs.querySelectorAll('.unit-tab').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          currentUnit = this.getAttribute('data-unit');
+          tabs.querySelectorAll('.unit-tab').forEach(function(b) { b.classList.remove('active'); });
+          this.classList.add('active');
+          renderAll();
+        });
+      });
+    }
+
+    function renderAll() {
+      var barbersContainer = document.getElementById('barbersContainer');
+      var statusBar = document.getElementById('statusBar');
+      var semPrefContainer = document.getElementById('semPrefContainer');
+      var lastUpdate = document.getElementById('lastUpdate');
+      var ctaButton = document.getElementById('ctaButton');
+
+      ctaButton.href = formLinks[currentUnit] || '#';
+
+      var barbeiros = allData.barbeiros.filter(function(b) { return b.unidade === currentUnit; });
+
+      barbeiros.sort(function(a, b) {
+        if (a.nome === "Paraguai") return 1;
+        if (b.nome === "Paraguai") return -1;
+        return 0;
+      });
+
+      var filaUnit = allData.fila.filter(function(f) { return f.unidade === currentUnit; });
+
+      var comBarbeiro = filaUnit.filter(function(f) {
+        return f.barbeiro && f.barbeiro !== "" && f.barbeiro !== "Sem preferência" && f.barbeiro !== "Sem preferencia";
+      });
+
+      var semPref = filaUnit.filter(function(f) {
+        return !f.barbeiro || f.barbeiro === "" || f.barbeiro === "Sem preferência" || f.barbeiro === "Sem preferencia";
+      });
+
+      var totalNaFila = filaUnit.filter(function(f) { return f.status === "Na fila"; }).length;
+      var totalAtendendo = filaUnit.filter(function(f) { return f.status === "Em atendimento"; }).length;
+
+      statusBar.innerHTML =
+        '<div class="status-item"><div class="status-dot fila"></div> Na fila: <span class="status-number">' + totalNaFila + '</span></div>' +
+        '<div class="status-item"><div class="status-dot atendendo"></div> Cortando: <span class="status-number">' + totalAtendendo + '</span></div>';
+
+      var html = '';
+      barbeiros.forEach(function(barb) {
+        var bFila = comBarbeiro.filter(function(f) { return f.barbeiro === barb.nome; });
+        var atendendo = bFila.filter(function(f) { return f.status === "Em atendimento"; });
+        var naFila = bFila.filter(function(f) { return f.status === "Na fila"; });
+        var chamados = bFila.filter(function(f) { return f.status === "Chamado"; });
+        var statusText = atendendo.length > 0 ? 'Ocupado' : 'Livre';
+        var statusClass = atendendo.length > 0 ? 'ocupado' : 'livre';
+        var inicial = barb.nome.charAt(0).toUpperCase();
+
+        var espera = naFila.length * TEMPO_MEDIO_CORTE;
+        if (atendendo.length > 0) espera += Math.round(TEMPO_MEDIO_CORTE / 2);
+        var esperaText = espera === 0 ? 'Livre' : (espera < 60 ? '~' + espera + 'min' : '~' + Math.round(espera / 60) + 'h');
+        var esperaClass = espera === 0 ? 'ok' : 'warning';
+
+        html += '<div class="barber-card">';
+        html += '  <div class="barber-card-header">';
+        html += '    <div class="barber-card-left">';
+        html += '      <div class="barber-avatar">' + inicial + '</div>';
+        html += '      <div class="barber-card-name">' + barb.nome + '</div>';
+        html += '    </div>';
+        html += '    <div class="barber-card-status ' + statusClass + '">' + statusText + '</div>';
+        html += '  </div>';
+        html += '  <div class="barber-card-body">';
+        html += '    <div class="barber-stats">';
+        html += '      <div class="barber-stat"><div class="barber-stat-number">' + naFila.length + '</div><div class="barber-stat-label">Na fila</div></div>';
+        html += '      <div class="barber-stat"><div class="barber-stat-number ' + esperaClass + '">' + esperaText + '</div><div class="barber-stat-label">Espera</div></div>';
+        html += '    </div>';
+
+        var atendChamado = [].concat(atendendo, chamados);
+        if (atendChamado.length > 0) {
+          html += '<div class="queue-section">';
+          atendChamado.forEach(function(f) {
+            var statusLabel, statusCss;
+            if (f.status === "Em atendimento") { statusLabel = "Cortando"; statusCss = "cortando"; }
+            else { statusLabel = "Chamado"; statusCss = "chamado"; }
+            html += '<div class="queue-person">';
+            html += '  <div class="queue-person-status ' + statusCss + '">' + statusLabel + '</div>';
+            html += '</div>';
+          });
+          html += '</div>';
+        } else if (naFila.length === 0) {
+          html += '<div class="empty-barber">Nenhum cliente na fila</div>';
+        }
+
+        html += '  </div></div>';
+      });
+      barbersContainer.innerHTML = html;
+
+      if (semPref.length > 0) {
+        var spHtml = '<div class="sem-pref-section"><div class="sem-pref-title">Sem preferencia</div>';
+        spHtml += '<span class="sem-pref-chip">' + semPref.length + ' cliente' + (semPref.length > 1 ? 's' : '') + ' aguardando</span>';
+        spHtml += '</div>';
+        semPrefContainer.innerHTML = spHtml;
+      } else {
+        semPrefContainer.innerHTML = '';
+      }
+
+      var now = new Date();
+      var h = String(now.getHours()).padStart(2, '0');
+      var m = String(now.getMinutes()).padStart(2, '0');
+      lastUpdate.textContent = 'Atualizado as ' + h + ':' + m;
+    }
+
+    // Carregar dados a cada 15 segundos
+    loadData();
+    setInterval(loadData, 15000);
+
+    // === Add to Home Screen ===
+    var installBanner = document.getElementById('installBanner');
+    var installBtn = document.getElementById('installBtn');
+    var installClose = document.getElementById('installClose');
+    var installModal = document.getElementById('installModal');
+    var installModalClose = document.getElementById('installModalClose');
+    var installSteps = document.getElementById('installSteps');
+
+    var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    var bannerClosed = false;
+    try { bannerClosed = sessionStorage.getItem('installBannerClosed') === '1'; } catch(e) {}
+    if (isStandalone || bannerClosed) installBanner.classList.add('hidden');
+
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+    installBtn.addEventListener('click', function() {
+      var steps = '';
+      if (isIOS) {
+        steps += '<div class="install-step"><div class="install-step-num">1</div><div class="install-step-text">Toque no botao de compartilhar (quadrado com seta pra cima) na barra do Safari</div></div>';
+        steps += '<div class="install-step"><div class="install-step-num">2</div><div class="install-step-text">Role pra baixo e toque em "Adicionar a Tela de Inicio"</div></div>';
+        steps += '<div class="install-step"><div class="install-step-num">3</div><div class="install-step-text">Toque em "Adicionar" no canto superior direito</div></div>';
+      } else {
+        steps += '<div class="install-step"><div class="install-step-num">1</div><div class="install-step-text">Toque nos 3 pontinhos no canto superior direito do Chrome</div></div>';
+        steps += '<div class="install-step"><div class="install-step-num">2</div><div class="install-step-text">Toque em "Adicionar a tela inicial"</div></div>';
+        steps += '<div class="install-step"><div class="install-step-num">3</div><div class="install-step-text">Toque em "Adicionar" para confirmar</div></div>';
+      }
+      installSteps.innerHTML = steps;
+      installModal.classList.add('show');
+    });
+
+    installClose.addEventListener('click', function() {
+      installBanner.classList.add('hidden');
+      try { sessionStorage.setItem('installBannerClosed', '1'); } catch(e) {}
+    });
+
+    installModalClose.addEventListener('click', function() { installModal.classList.remove('show'); });
+    installModal.addEventListener('click', function(e) { if (e.target === installModal) installModal.classList.remove('show'); });
+  </script>
 </body>
 </html>
