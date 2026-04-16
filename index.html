@@ -497,6 +497,56 @@
       cursor: pointer;
       font-family: 'Inter', sans-serif;
     }
+
+    /* Horario fechado */
+    .closed-banner {
+      margin: 16px 16px 0;
+      padding: 20px;
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(239, 68, 68, 0.05));
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 16px;
+      text-align: center;
+    }
+
+    .closed-banner.hidden { display: none; }
+
+    .closed-icon {
+      font-size: 36px;
+      margin-bottom: 8px;
+    }
+
+    .closed-title {
+      font-size: 20px;
+      font-weight: 900;
+      color: #f87171;
+      margin-bottom: 6px;
+    }
+
+    .closed-desc {
+      font-size: 15px;
+      color: #94a3b8;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .closed-hours {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 20px;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 800;
+      color: #93c5fd;
+      letter-spacing: 1px;
+    }
+
+    .cta-button.disabled {
+      background: linear-gradient(135deg, #475569, #64748b);
+      box-shadow: none;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
@@ -523,6 +573,14 @@
   </div>
 
   <div class="unit-tabs" id="unitTabs"></div>
+
+  <!-- Banner horario fechado -->
+  <div class="closed-banner hidden" id="closedBanner">
+    <div class="closed-icon">🕐</div>
+    <div class="closed-title">Fila fechada no momento</div>
+    <div class="closed-desc">A fila funciona de segunda a sabado</div>
+    <div class="closed-hours">07:00 as 19:00</div>
+  </div>
 
   <div class="status-bar" id="statusBar">
     <div class="loading">
@@ -607,6 +665,7 @@
       var ctaButton = document.getElementById('ctaButton');
 
       ctaButton.href = formLinks[currentUnit] || '#';
+      checkHorario();
 
       var barbeiros = allData.barbeiros.filter(function(b) { return b.unidade === currentUnit; });
 
@@ -700,6 +759,34 @@
     // Carregar dados a cada 15 segundos
     loadData();
     setInterval(loadData, 15000);
+
+    // === Horario de funcionamento ===
+    var HORA_ABRE = 7;
+    var HORA_FECHA = 19;
+
+    function checkHorario() {
+      var now = new Date();
+      var hora = now.getHours();
+      var dia = now.getDay(); // 0=domingo
+      var aberto = (dia >= 1 && dia <= 6) && (hora >= HORA_ABRE && hora < HORA_FECHA);
+
+      var closedBanner = document.getElementById('closedBanner');
+      var ctaButton = document.getElementById('ctaButton');
+
+      if (!aberto) {
+        closedBanner.classList.remove('hidden');
+        ctaButton.classList.add('disabled');
+        ctaButton.textContent = 'FILA FECHADA';
+        ctaButton.removeAttribute('href');
+      } else {
+        closedBanner.classList.add('hidden');
+        ctaButton.classList.remove('disabled');
+        ctaButton.textContent = 'ENTRAR NA FILA';
+      }
+    }
+
+    checkHorario();
+    setInterval(checkHorario, 60000);
 
     // === Add to Home Screen ===
     var installBanner = document.getElementById('installBanner');
