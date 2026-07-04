@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=1920, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
-    
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    
+
     html, body {
       font-family: 'Inter', sans-serif;
       background: linear-gradient(135deg, #0a1628 0%, #0d2137 30%, #0f2a4a 60%, #0a1628 100%);
@@ -32,7 +32,7 @@
     }
 
     body > * { position: relative; z-index: 1; }
-    
+
     .header {
       padding: 14px 40px;
       background: linear-gradient(180deg, rgba(15, 42, 74, 0.95) 0%, rgba(10, 22, 40, 0.7) 100%);
@@ -43,7 +43,13 @@
       flex-shrink: 0;
       height: 80px;
     }
-    
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
     .header h1 {
       font-size: 2.4em;
       font-weight: 900;
@@ -54,13 +60,26 @@
       text-transform: uppercase;
     }
 
+    .header-unit-badge {
+      font-size: 1.1em;
+      font-weight: 800;
+      color: #c4b5fd;
+      background: rgba(139, 92, 246, 0.15);
+      border: 2px solid rgba(139, 92, 246, 0.4);
+      padding: 6px 18px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      white-space: nowrap;
+    }
+
     .header-right {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
       gap: 2px;
     }
-    
+
     .header .clock {
       font-size: 2.2em;
       color: #e2e8f0;
@@ -74,7 +93,7 @@
       font-weight: 700;
       letter-spacing: 0.5px;
     }
-    
+
     .main-container {
       flex: 1;
       display: flex;
@@ -83,16 +102,11 @@
       min-height: 0;
     }
 
-    /* Grupo esquerdo (sem QR) e direito (com QR) */
     .group-section {
       display: flex;
       flex-direction: column;
       overflow: hidden;
       flex: 1;
-    }
-
-    .group-section.has-qr {
-      border-right: 3px solid rgba(59, 130, 246, 0.15);
     }
 
     .group-body {
@@ -114,7 +128,7 @@
       flex-direction: column;
       min-height: 0;
     }
-    
+
     .barber-header {
       padding: 10px 14px;
       background: linear-gradient(135deg, rgba(29, 78, 216, 0.4), rgba(37, 99, 235, 0.2));
@@ -133,7 +147,7 @@
       min-width: 0;
       flex-shrink: 1;
     }
-    
+
     .barber-name {
       font-size: 1.5em;
       font-weight: 900;
@@ -141,18 +155,6 @@
       text-transform: uppercase;
       letter-spacing: 2px;
       white-space: nowrap;
-    }
-
-    .barber-unit-badge {
-      font-size: 0.65em;
-      color: #64748b;
-      font-weight: 700;
-      background: rgba(100, 116, 139, 0.1);
-      padding: 2px 8px;
-      border-radius: 6px;
-      border: 1px solid rgba(100, 116, 139, 0.15);
-      white-space: nowrap;
-      flex-shrink: 0;
     }
 
     .barber-count {
@@ -166,7 +168,7 @@
       white-space: nowrap;
       flex-shrink: 0;
     }
-    
+
     .barber-status {
       font-size: 0.85em;
       font-weight: 800;
@@ -175,18 +177,18 @@
       white-space: nowrap;
       flex-shrink: 0;
     }
-    
-    .barber-status.livre { 
-      color: #4ade80; 
+
+    .barber-status.livre {
+      color: #4ade80;
       background: rgba(74, 222, 128, 0.12);
       border: 2px solid rgba(74, 222, 128, 0.3);
     }
-    .barber-status.ocupado { 
-      color: #f97316; 
+    .barber-status.ocupado {
+      color: #f97316;
       background: rgba(249, 115, 22, 0.12);
       border: 2px solid rgba(249, 115, 22, 0.3);
     }
-    
+
     .queue-list {
       flex: 1;
       padding: 10px;
@@ -200,7 +202,7 @@
     .queue-list::-webkit-scrollbar { width: 6px; }
     .queue-list::-webkit-scrollbar-track { background: transparent; }
     .queue-list::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.3); border-radius: 4px; }
-    
+
     .queue-item {
       border-radius: 12px;
       display: flex;
@@ -214,7 +216,7 @@
       from { opacity: 0; transform: translateY(-10px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    
+
     .queue-item.size-xl { padding: 20px 18px; }
     .queue-item.size-xl .senha-badge { font-size: 1.8em; min-width: 75px; }
     .queue-item.size-xl .client-name { font-size: 1.5em; }
@@ -249,12 +251,12 @@
     .queue-item.size-xs .client-service { display: none; }
     .queue-item.size-xs .status-tag { font-size: 0.55em; padding: 2px 6px; }
     .queue-item.size-xs .wait-time { font-size: 0.62em; }
-    
+
     .queue-item.na-fila {
       background: linear-gradient(135deg, rgba(234, 179, 8, 0.15), rgba(234, 179, 8, 0.05));
       border: 2px solid rgba(234, 179, 8, 0.3);
     }
-    
+
     .queue-item.chamado {
       background: linear-gradient(135deg, rgba(249, 115, 22, 0.25), rgba(249, 115, 22, 0.1));
       border: 2px solid rgba(249, 115, 22, 0.5);
@@ -262,36 +264,36 @@
     }
 
     @keyframes chamadoPulse {
-      0%, 100% { 
-        opacity: 1; 
+      0%, 100% {
+        opacity: 1;
         box-shadow: 0 0 8px rgba(249, 115, 22, 0.3);
         border-color: rgba(249, 115, 22, 0.5);
       }
-      50% { 
-        opacity: 0.9; 
+      50% {
+        opacity: 0.9;
         box-shadow: 0 0 35px rgba(249, 115, 22, 0.6), 0 0 60px rgba(249, 115, 22, 0.2);
         border-color: rgba(249, 115, 22, 0.8);
       }
     }
-    
+
     .queue-item.em-atendimento {
       background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.08));
       border: 2px solid rgba(59, 130, 246, 0.4);
     }
-    
+
     .senha-badge {
       font-weight: 900;
       text-align: center;
       padding: 4px 8px;
       border-radius: 8px;
     }
-    
+
     .na-fila .senha-badge { color: #fbbf24; }
     .chamado .senha-badge { color: #fb923c; }
     .em-atendimento .senha-badge { color: #60a5fa; }
-    
+
     .client-info { flex: 1; min-width: 0; }
-    
+
     .client-name {
       font-weight: 800;
       color: #e2e8f0;
@@ -299,7 +301,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    
+
     .client-service {
       color: #94a3b8;
       margin-top: 3px;
@@ -321,7 +323,7 @@
       font-weight: 600;
       white-space: nowrap;
     }
-    
+
     .status-tag {
       font-weight: 800;
       border-radius: 8px;
@@ -330,12 +332,12 @@
       flex-shrink: 0;
       white-space: nowrap;
     }
-    
+
     .na-fila .status-tag { background: rgba(234, 179, 8, 0.2); color: #fbbf24; }
     .chamado .status-tag { background: rgba(249, 115, 22, 0.25); color: #fb923c; }
     .em-atendimento .status-tag { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
 
-    /* QR embaixo do grupo */
+    /* QR ao lado das colunas */
     .qr-shared {
       flex-shrink: 0;
       display: flex;
@@ -350,8 +352,8 @@
     }
 
     .qr-shared img {
-      width: 260px;
-      height: 260px;
+      width: 220px;
+      height: 220px;
       border-radius: 12px;
       background: white;
       padding: 8px;
@@ -390,7 +392,7 @@
       padding: 0 20px 6px;
       flex-shrink: 0;
     }
-    
+
     .sem-pref-header {
       text-align: center;
       padding: 6px;
@@ -400,7 +402,7 @@
       border-top: 2px solid rgba(167, 139, 250, 0.2);
       padding-top: 8px;
     }
-    
+
     .sem-pref-list {
       display: flex;
       flex-wrap: wrap;
@@ -408,7 +410,7 @@
       justify-content: center;
       margin-top: 6px;
     }
-    
+
     .sem-pref-item {
       padding: 8px 16px;
       background: linear-gradient(135deg, rgba(167, 139, 250, 0.12), rgba(167, 139, 250, 0.05));
@@ -418,10 +420,10 @@
       align-items: center;
       gap: 10px;
     }
-    
+
     .sem-pref-item .senha-badge { color: #a78bfa; font-size: 1.2em; }
     .sem-pref-item .client-name { font-size: 1.1em; }
-    
+
     .empty-queue {
       text-align: center;
       padding: 30px;
@@ -429,7 +431,7 @@
       font-size: 1.3em;
       font-style: italic;
     }
-    
+
     .footer {
       flex-shrink: 0;
       text-align: center;
@@ -440,14 +442,14 @@
       color: #64748b;
       height: 32px;
     }
-    
+
     .total-bar {
       display: flex;
       justify-content: center;
       gap: 40px;
       padding: 2px;
     }
-    
+
     .total-item { display: flex; align-items: center; gap: 8px; font-weight: 700; }
     .total-dot { width: 10px; height: 10px; border-radius: 50%; }
     .total-dot.amarelo { background: #fbbf24; }
@@ -457,35 +459,36 @@
 </head>
 <body>
   <div class="header">
-    <h1>BARBEARIA DO PARAGUAI</h1>
+    <div class="header-left">
+      <h1>BARBEARIA DO PARAGUAI</h1>
+      <div class="header-unit-badge">João Pessoa</div>
+    </div>
     <div class="header-right">
       <div class="clock" id="clock"></div>
       <div class="date" id="date"></div>
     </div>
   </div>
-  
+
   <div class="main-container" id="mainContainer"></div>
-  
+
   <div class="sem-preferencia" id="semPref"></div>
-  
+
   <div class="footer">
     <div class="total-bar" id="totalBar"></div>
   </div>
-  
+
   <script>
     var allData = { fila: [], barbeiros: [] };
 
-    // Layout customizado: dois grupos
-    // Esquerdo: Tobias + Riccky + Giovani (com QR embaixo)
-    // Direito: Igor + Paraguai (sem QR)
-    var groupLeft = ["Tobias", "Riccky", "Giovani"];
-    var groupRight = ["Igor", "Paraguai"];
+    // Painel exclusivo da Unidade 2 (Joao Pessoa)
+    var UNIT = "Unidade 2";
+    var BARBERS = ["Riccky", "Giovani"];
 
-    var qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https://barbearia-paraguai2.github.io/fila/";
+    var qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https://barbearia-paraguai2.github.io/fila/joaopessoa.html";
 
     var diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
     var meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
-    
+
     function updateClock() {
       var now = new Date();
       var h = String(now.getHours()).padStart(2, '0');
@@ -509,6 +512,13 @@
     window.addEventListener('resize', scaleToFit);
     scaleToFit();
 
+    // Tela cheia no primeiro toque (pro tablet)
+    document.addEventListener('click', function() {
+      var el = document.documentElement;
+      var fn = el.requestFullscreen || el.mozRequestFullScreen || el.webkitRequestFullscreen;
+      if (fn) fn.call(el);
+    });
+
     function getSizeClass(count) {
       if (count <= 3) return 'size-xl';
       if (count <= 5) return 'size-lg';
@@ -527,7 +537,7 @@
       var m = diff % 60;
       return h + 'h' + (m > 0 ? m + 'min' : '');
     }
-    
+
     var API_URL = "https://script.google.com/macros/s/AKfycbwHm7Y_NW-M8MRkQsBGx7wXquS283weR4cZs9QrV0b9H7VAyG8RWvXR1P4G7i2ptyMKJg/exec?p=api";
 
     function loadData() {
@@ -549,25 +559,22 @@
       var chamadoCount = bFila.filter(function(f) { return f.status === "Chamado"; }).length;
       var statusText = atendendo.length > 0 ? 'Ocupado' : 'Livre';
       var statusClass = atendendo.length > 0 ? 'ocupado' : 'livre';
-      
+
       var countText = naFilaCount + ' na fila';
       if (chamadoCount > 0) countText += ' | ' + chamadoCount + ' chamado';
       var cardSize = getSizeClass(bFila.length);
-
-      var unitLabel = barb.unidade === "Unidade 1" ? "Bordignon" : "J. Pessoa";
 
       var html = '';
       html += '<div class="barber-column">';
       html += '  <div class="barber-header">';
       html += '    <div class="barber-header-left">';
       html += '      <div class="barber-name">' + barb.nome + '</div>';
-      html += '      <div class="barber-unit-badge">' + unitLabel + '</div>';
       html += '      <div class="barber-count">' + countText + '</div>';
       html += '    </div>';
       html += '    <div class="barber-status ' + statusClass + '">' + statusText + '</div>';
       html += '  </div>';
       html += '  <div class="queue-list">';
-      
+
       if (bFila.length === 0) {
         html += '<div class="empty-queue">Nenhum cliente</div>';
       } else {
@@ -575,7 +582,7 @@
           var cssClass = f.status === "Na fila" ? "na-fila" : (f.status === "Chamado" ? "chamado" : "em-atendimento");
           var statusLabel = f.status === "Em atendimento" ? "Cortando" : f.status;
           var waitText = (f.status === "Na fila" || f.status === "Chamado") ? getWaitTime(f.entrada) : '';
-          
+
           html += '<div class="queue-item ' + cssClass + ' ' + cardSize + '">';
           html += '  <div class="senha-badge">' + f.senha + '</div>';
           html += '  <div class="client-info">';
@@ -591,27 +598,28 @@
           html += '</div>';
         });
       }
-      
+
       html += '  </div>';
       html += '</div>';
       return html;
     }
-    
+
     function renderAll() {
       var container = document.getElementById('mainContainer');
       var semPref = document.getElementById('semPref');
       var totalBar = document.getElementById('totalBar');
 
-      // Todos os clientes com barbeiro
-      var comBarbeiro = allData.fila.filter(function(f) {
+      // Somente clientes da Unidade 2
+      var filaUnit = allData.fila.filter(function(f) { return f.unidade === UNIT; });
+
+      var comBarbeiro = filaUnit.filter(function(f) {
         return f.barbeiro && f.barbeiro !== "" && f.barbeiro !== "Sem preferência" && f.barbeiro !== "Sem preferencia";
       });
 
-      var semPrefList = allData.fila.filter(function(f) {
+      var semPrefList = filaUnit.filter(function(f) {
         return !f.barbeiro || f.barbeiro === "" || f.barbeiro === "Sem preferência" || f.barbeiro === "Sem preferencia";
       });
 
-      // Encontrar barbeiros por nome
       function findBarber(nome) {
         for (var i = 0; i < allData.barbeiros.length; i++) {
           if (allData.barbeiros[i].nome === nome) return allData.barbeiros[i];
@@ -620,11 +628,9 @@
       }
 
       var html = '';
-
-      // Grupo esquerdo: Tobias + Riccky (com QR)
-      html += '<div class="group-section has-qr">';
+      html += '<div class="group-section">';
       html += '  <div class="group-body">';
-      groupLeft.forEach(function(nome) {
+      BARBERS.forEach(function(nome) {
         html += renderBarberColumn(findBarber(nome), comBarbeiro);
       });
       html += '  </div>';
@@ -638,18 +644,8 @@
       html += '  </div>';
       html += '</div>';
 
-      // Grupo direito: Igor + Paraguai (sem QR, coluna inteira)
-      html += '<div class="group-section">';
-      html += '  <div class="group-body">';
-      groupRight.forEach(function(nome) {
-        html += renderBarberColumn(findBarber(nome), comBarbeiro);
-      });
-      html += '  </div>';
-      html += '</div>';
-      
       container.innerHTML = html;
-      
-      // Sem preferencia
+
       if (semPrefList.length > 0) {
         var spHtml = '<div class="sem-pref-header">Sem preferencia — proximo livre atende</div>';
         spHtml += '<div class="sem-pref-list">';
@@ -667,21 +663,21 @@
       } else {
         semPref.innerHTML = '';
       }
-      
-      var naFila = allData.fila.filter(function(f) { return f.status === "Na fila"; }).length;
-      var chamados = allData.fila.filter(function(f) { return f.status === "Chamado"; }).length;
-      var atend = allData.fila.filter(function(f) { return f.status === "Em atendimento"; }).length;
-      
-      totalBar.innerHTML = 
+
+      var naFila = filaUnit.filter(function(f) { return f.status === "Na fila"; }).length;
+      var chamados = filaUnit.filter(function(f) { return f.status === "Chamado"; }).length;
+      var atend = filaUnit.filter(function(f) { return f.status === "Em atendimento"; }).length;
+
+      totalBar.innerHTML =
         '<div class="total-item"><div class="total-dot amarelo"></div> Na fila: ' + naFila + '</div>' +
         '<div class="total-item"><div class="total-dot laranja"></div> Chamados: ' + chamados + '</div>' +
         '<div class="total-item"><div class="total-dot azul"></div> Em atendimento: ' + atend + '</div>';
     }
-    
+
     setInterval(function() {
       if (allData.fila.length > 0) renderAll();
     }, 60000);
-    
+
     loadData();
     setInterval(loadData, 10000);
   </script>
