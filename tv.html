@@ -114,6 +114,18 @@
       flex-direction: column;
       min-height: 0;
     }
+
+    /* Dois barbeiros dividindo a mesma coluna (Riccky + Giovani) */
+    .barber-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .barber-section + .barber-section {
+      border-top: 3px solid rgba(59, 130, 246, 0.25);
+    }
     
     .barber-header {
       padding: 10px 14px;
@@ -476,9 +488,10 @@
     var allData = { fila: [], barbeiros: [] };
 
     // Layout customizado: dois grupos
-    // Esquerdo: Tobias + Riccky + Giovani (com QR embaixo)
+    // Esquerdo: Tobias + coluna dividida Riccky/Giovani (com QR embaixo)
     // Direito: Igor + Paraguai (sem QR)
-    var groupLeft = ["Tobias", "Riccky", "Giovani"];
+    var groupLeft = ["Tobias"];
+    var groupPair = ["Riccky", "Giovani"]; // J. Pessoa: dois na mesma coluna
     var groupRight = ["Igor", "Paraguai"];
 
     var qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https://barbearia-paraguai2.github.io/fila/";
@@ -557,7 +570,7 @@
       var unitLabel = barb.unidade === "Unidade 1" ? "Bordignon" : "J. Pessoa";
 
       var html = '';
-      html += '<div class="barber-column">';
+      html += '<div class="barber-section">';
       html += '  <div class="barber-header">';
       html += '    <div class="barber-header-left">';
       html += '      <div class="barber-name">' + barb.nome + '</div>';
@@ -621,12 +634,17 @@
 
       var html = '';
 
-      // Grupo esquerdo: Tobias + Riccky (com QR)
+      // Grupo esquerdo: Tobias + coluna dividida Riccky/Giovani (com QR)
       html += '<div class="group-section has-qr">';
       html += '  <div class="group-body">';
       groupLeft.forEach(function(nome) {
+        html += '<div class="barber-column">' + renderBarberColumn(findBarber(nome), comBarbeiro) + '</div>';
+      });
+      html += '<div class="barber-column">';
+      groupPair.forEach(function(nome) {
         html += renderBarberColumn(findBarber(nome), comBarbeiro);
       });
+      html += '</div>';
       html += '  </div>';
       html += '  <div class="qr-shared">';
       html += '    <img src="' + qrUrl + '" alt="QR Fila"/>';
@@ -642,7 +660,7 @@
       html += '<div class="group-section">';
       html += '  <div class="group-body">';
       groupRight.forEach(function(nome) {
-        html += renderBarberColumn(findBarber(nome), comBarbeiro);
+        html += '<div class="barber-column">' + renderBarberColumn(findBarber(nome), comBarbeiro) + '</div>';
       });
       html += '  </div>';
       html += '</div>';
